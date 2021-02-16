@@ -8,12 +8,29 @@
 
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
+import { TypeOrmModule } from '@nestjs/typeorm';
 import { ThoughtsModule } from './thoughts/thoughts.module';
+import { __prod__ } from './constants/node.defaults';
+import { User } from './users/interfaces/user.entity';
+import { Thought } from './thoughts/interfaces/thought.entity';
+import { UsersModule } from './users/users.module';
 
 @Module({
     imports: [
         ConfigModule.forRoot(),
-        ThoughtsModule
+        TypeOrmModule.forRoot({
+            type: 'postgres',
+            url: process.env.DATABASE_URL || 'postgres://postgres:password@localhost/graph_thoughts?sslmode=disable',
+            username: 'postgres',
+            password: '',
+            entities: [
+                User,
+                Thought
+            ],
+            synchronize: !__prod__,
+        }),
+        ThoughtsModule,
+        UsersModule,
     ],
 })
 export class AppModule{
