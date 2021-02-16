@@ -8,40 +8,47 @@
 
 import { Injectable } from '@nestjs/common';
 import { IThoughts } from './interfaces/thoughts.interface';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Thought } from './interfaces/thought.entity';
+import { DeleteResult, Repository, UpdateResult } from 'typeorm';
+import { User } from '../users/interfaces/user.entity';
+import { UsersService } from '../users/users.service';
 
 @Injectable()
 export class ThoughtsService {
-    private readonly _sampleData: IThoughts[];
+    constructor(
+        @InjectRepository(Thought)
+        private _thoughtContext: Repository<Thought>,
+        private _userService: UsersService
+    ) {}
 
-    constructor() {
-        this._sampleData = [];
+    async find(): Promise<Thought[]> {
+        return await this._thoughtContext.find();
     }
 
-    async add(body: IThoughts): Promise<IThoughts> {
-        this._sampleData.push(body);
-        return body;
+    async findOne(id: number): Promise<Thought | undefined> {
+        return await this._thoughtContext.findOne(id);
     }
 
-    async allData(): Promise<IThoughts[]> {
-        return this._sampleData;
+    async findForUser(userid: number): Promise<Thought[]> {
+        const user = await this._userService.findOne(userid);
+        return (await this._thoughtContext.find({ where: { user: user }}));
     }
 
-    async data(id: number): Promise<IThoughts | null> {
-        if (id < 0 || id >= this._sampleData.length)
+    async create(user: User, body: IThoughts): Promise<Thought | null> {
+        const validUser = await this._userService.findOne(user.id);
+        if (!validUser)
             return null;
-        return this._sampleData[id];
+        const thought = new Thought(body, validUser);
+        return await this._thoughtContext.save(thought);
     }
 
-    async change(id: number, body: IThoughts): Promise<IThoughts> {
-        this._sampleData[id] = body;
-        return body;
+    async delete(id: number): Promise<DeleteResult> {
+        return await this._thoughtContext.delete(id);
     }
 
-    async delete(id: number): Promise<IThoughts | null> {
-        if (id < 0 || id >= this._sampleData.length)
-            return null;
-        const deleted = this._sampleData[id];
-        this._sampleData.splice(id, 1);
-        return deleted;
+    async change(id: number, body: Thought): Promise<UpdateResult> {
+        return await this._thoughtContext.update(id, body);
     }
+
 }

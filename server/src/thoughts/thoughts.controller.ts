@@ -16,10 +16,12 @@ import {
     Put,
     Delete,
     NotFoundException,
-    ForbiddenException,
+    ForbiddenException, UnauthorizedException, Query, BadRequestException,
 } from '@nestjs/common';
 import { ThoughtsService } from './thoughts.service';
-import { IThoughts } from './interfaces/thoughts.interface';
+import { IThoughts, IThoughtUser } from './interfaces/thoughts.interface';
+import { Thought } from './interfaces/thought.entity';
+import { UpdateResult } from 'typeorm';
 
 @Controller('/thoughts')
 export class ThoughtsController {
@@ -27,36 +29,63 @@ export class ThoughtsController {
     constructor(private thoughtService: ThoughtsService) {}
 
     @Get()
-    async getAll(): Promise<IThoughts[]> {
-        return this.thoughtService.allData();
+    async getAll(): Promise<Thought[]> {
+        return this.thoughtService.find();
+    }
+
+    @Get('/filter')
+    async getFilter(@Query('userid', ParseIntPipe) userid: number | undefined): Promise<Thought[]> {
+        if(!userid)
+            throw new NotFoundException();
+        return this.thoughtService.findForUser(userid);
     }
 
     @Get(':id')
-    async get(@Param('id', ParseIntPipe) id: number): Promise<IThoughts> {
-        const res = await this.thoughtService.data(id);
+    async get(@Param('id', ParseIntPipe) id: number): Promise<Thought> {
+        const res = await this.thoughtService.findOne(id);
         if (!res)
             throw new NotFoundException();
         return res;
     }
 
+
     @Post()
-    async post(@Body() body: IThoughts): Promise<IThoughts> {
-        return this.thoughtService.add(body);
+    async post(@Body() data: IThoughtUser): Promise<Thought> {
+        const {thought, user} = data;
+        const res = await this.thoughtService.create(user, thought);
+        if (!res)
+            throw new UnauthorizedException();
+        return res;
     }
 
     @Put(':id')
-    async put(@Param('id', ParseIntPipe) id: number, @Body() body: IThoughts): Promise<IThoughts> {
-        if (id < 0 || id > (await this.thoughtService.allData()).length)
-            throw new NotFoundException();
-        return this.thoughtService.change(id, body);
+    async change(@Param('id', ParseIntPipe) id: number, @Body() body: Thought): Promise<UpdateResult> {
+        if (id !== body.id)
+            throw new BadRequestException();
+
+        const isOwned = (await this.thoughtService.findForUser(body.user.id))
+            .map(thought => thought.id === body.id).reduce((prev, curr) => prev || curr, false);
+
+        if (!isOwned)
+            throw new ForbiddenException();
+
+        return await this.thoughtService.change(id, body);
     }
 
     @Delete(':id')
-    async delete(@Param('id', ParseIntPipe) id: number): Promise<IThoughts> {
+    async delete(@Param('id', ParseIntPipe) id: number, @Query('userid', ParseIntPipe) userid: number | undefined): Promise<void> {
+        if (!userid)
+            throw new UnauthorizedException();
+
+        const isAllowed = (await this.thoughtService.findForUser(userid))
+            .map(thought => thought.id === id)
+            .reduce((prev, curr) => prev || curr, false);
+        if (!isAllowed)
+            throw new ForbiddenException();
+
         const res = await this.thoughtService.delete(id);
         if (!res)
             throw new ForbiddenException();
-        return res;
     }
 
     @Get('random/:word')
@@ -64,9 +93,6 @@ export class ThoughtsController {
         return {
             title: 'Random',
             body: `You said something about ${word}`,
-            author: {
-                name: 'Anonymous'
-            }
         };
     }
 }

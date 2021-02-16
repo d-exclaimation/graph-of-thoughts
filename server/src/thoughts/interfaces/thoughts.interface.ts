@@ -6,13 +6,15 @@
 //  Copyright © 2021 d-exclaimation. All rights reserved.
 //
 
+import { User } from '../../users/interfaces/user.entity';
+
 export interface IThoughts {
     title: string,
     body: string,
     imageURL?: string,
-    author: IAuthor,
 }
 
-export interface IAuthor {
-    name: string
+export interface IThoughtUser {
+    thought: IThoughts,
+    user: User
 }

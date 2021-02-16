@@ -27,7 +27,8 @@ export class Thought {
     @ManyToOne(() => User, user => user.thoughts)
     user!: User;
 
-    constructor(body: IThoughts) {
+    constructor(body: IThoughts, user: User) {
         Object.assign(this, body);
+        this.user = user;
     }
 }

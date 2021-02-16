@@ -9,9 +9,12 @@
 import { Module } from '@nestjs/common';
 import { ThoughtsController } from './thoughts.controller';
 import { ThoughtsService } from './thoughts.service';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { Thought } from './interfaces/thought.entity';
+import { UsersModule } from '../users/users.module';
 
 @Module({
-    imports: [],
+    imports: [TypeOrmModule.forFeature([Thought]), UsersModule],
     controllers: [ThoughtsController],
     providers: [ThoughtsService]
 })
