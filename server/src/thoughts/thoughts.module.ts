@@ -8,10 +8,11 @@
 
 import { Module } from '@nestjs/common';
 import { ThoughtsController } from './thoughts.controller';
+import { ThoughtsService } from './thoughts.service';
 
 @Module({
     imports: [],
     controllers: [ThoughtsController],
-    providers: []
+    providers: [ThoughtsService]
 })
 export class ThoughtsModule {}
