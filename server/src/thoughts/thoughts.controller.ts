@@ -69,7 +69,7 @@ export class ThoughtsController {
         if (!isOwned)
             throw new ForbiddenException();
 
-        return await this.thoughtService.change(id, body);
+        return this.thoughtService.change(id, body);
     }
 
     @Delete(':id')

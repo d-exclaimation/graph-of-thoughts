@@ -50,7 +50,7 @@ export class UsersController {
     async update(@Param('id', ParseIntPipe) id: number, @Body() user: User): Promise<UpdateResult> {
         if (id !== user.id)
             throw new BadRequestException();
-        return await this.userService.update(id, user);
+        return this.userService.update(id, user);
     }
 
     @Delete(':id')
