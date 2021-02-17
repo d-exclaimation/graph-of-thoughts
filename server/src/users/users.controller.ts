@@ -11,11 +11,11 @@ import {
     Get,
     Post,
     Body,
-    Param, ParseIntPipe, NotFoundException, Delete, Put, BadRequestException,
+    Param, ParseIntPipe, NotFoundException, Delete, Put, BadRequestException, Query,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { User } from './interfaces/user.entity';
-import { IUser } from './interfaces/users.interface';
+import { UserSignUp } from './interfaces/users.interface';
 import { UpdateResult } from 'typeorm';
 
 @Controller('/users')
@@ -33,6 +33,15 @@ export class UsersController {
         return this.userService.findAll();
     }
 
+    @Get('/login')
+    async getAccount(@Query('email') email: string): Promise<User> {
+        const all = await this.userService.findAll();
+        const users = all.filter(user => user.email === email).shift();
+        if (!users)
+            throw new NotFoundException();
+        return users;
+    }
+
     @Get(':id')
     async get(@Param('id', ParseIntPipe) id: number): Promise<User> {
         const res = await this.userService.findOne(id);
@@ -42,7 +51,7 @@ export class UsersController {
     }
 
     @Post()
-    async createNew(@Body() user: IUser): Promise<User> {
+    async createNew(@Body() user: UserSignUp): Promise<User> {
         return this.userService.create(user)
     }
 

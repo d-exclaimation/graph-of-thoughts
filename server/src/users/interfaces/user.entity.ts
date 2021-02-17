@@ -8,7 +8,7 @@
 
 import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
 import { Thought } from '../../thoughts/interfaces/thought.entity';
-import { IUser } from './users.interface';
+import { UserSignUp } from './users.interface';
 
 @Entity()
 export class User {
@@ -24,7 +24,7 @@ export class User {
     @OneToMany(() => Thought, thought => thought.user)
     thoughts!: Thought[];
 
-    constructor(body: IUser) {
+    constructor(body: UserSignUp) {
         Object.assign(this, body);
     }
 }

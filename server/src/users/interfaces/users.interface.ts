@@ -6,7 +6,12 @@
 //  Copyright © 2021 d-exclaimation. All rights reserved.
 //
 
-export interface IUser {
-    username: string,
-    email: string,
+import { IsEmail, IsNotEmpty } from 'class-validator';
+
+export class UserSignUp {
+    @IsNotEmpty()
+    username!: string;
+
+    @IsEmail()
+    email!: string;
 }

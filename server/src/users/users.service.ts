@@ -10,7 +10,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './interfaces/user.entity';
 import { Repository, UpdateResult } from 'typeorm';
-import { IUser } from './interfaces/users.interface';
+import { UserSignUp } from './interfaces/users.interface';
 
 @Injectable()
 export class UsersService {
@@ -31,7 +31,7 @@ export class UsersService {
         await this._userContext.delete(id);
     }
 
-    async create(body: IUser): Promise<User> {
+    async create(body: UserSignUp): Promise<User> {
         return await this._userContext.save(body);
     }
 
