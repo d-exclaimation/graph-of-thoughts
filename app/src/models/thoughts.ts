@@ -6,11 +6,14 @@
 //  Copyright © 2021 d-exclaimation. All rights reserved.
 //
 
+import {User} from './users';
+
 export interface Thoughts {
     id: number,
     title: string,
     body: string,
     imageURL?: string,
+    user?: User
 }
 
 /*

@@ -8,7 +8,7 @@
 
 import React from 'react';
 
-import {Box} from '@chakra-ui/react';
+import {Box, VStack} from '@chakra-ui/react';
 
 import {Thoughts} from '../models/thoughts';
 
@@ -18,15 +18,19 @@ interface Props {
 
 const Timeline: React.FC<Props> = ({ timeline }: Props) => {
     return (
-        <Box>
+        <VStack spacing={5}>
             { timeline.map((thought, i) => {
                 return (
-                    <Box key={i}>
+                    <Box
+                        p={5}
+                        shadow="dark-lg"
+                        color="#fafafa" key={i}
+                    >
                         {thought.title}
                     </Box>
                 );
             }) }
-        </Box>
+        </VStack>
     );
 };
 
