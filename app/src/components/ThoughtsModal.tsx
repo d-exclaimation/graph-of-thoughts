@@ -14,7 +14,7 @@ import {
     Input,
     Textarea
 } from '@chakra-ui/react';
-import FormModal from './FormModal';
+import FormModal from './templates/FormModal';
 import {nextBlue} from '../constants/color.scheme';
 
 interface Props {
@@ -26,15 +26,17 @@ interface Props {
 export const ThoughtsModal: React.FC<Props> = ({ isOpen, onConfirm, onClose }: Props) => {
     const [title, setTitle] = React.useState('');
     const [body, setBody] = React.useState('');
+    const [image, setImage] = React.useState('');
 
     React.useEffect(() => {
         setTitle('');
         setBody('');
+        setImage('');
     }, []);
 
     return (
         <>
-            <FormModal isShown={isOpen} onCancel={onClose} onConfirm={() => onConfirm(title, body)} body={
+            <FormModal title={'New Thought'} isShown={isOpen} onCancel={onClose} onConfirm={() => onConfirm(title, body)} body={
                 (<>
                     <FormControl>
                         <FormLabel> Title </FormLabel>
@@ -55,6 +57,15 @@ export const ThoughtsModal: React.FC<Props> = ({ isOpen, onConfirm, onClose }: P
                             variant="flushed"
                             placeholder="Enter your thoughts"
                         />
+                    </FormControl>
+                    <FormControl>
+                        <FormLabel> Image URL </FormLabel>
+                        <Input
+                            value={image}
+                            onChange={e => setImage(e.target.value)}
+                            color={nextBlue}
+                            variant="flushed"
+                            placeholder="Enter image URL (optional)" />
                     </FormControl>
                 </>)
             }/>

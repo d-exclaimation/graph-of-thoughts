@@ -8,9 +8,9 @@
 
 import React from 'react';
 
-import { VStack, Center } from '@chakra-ui/react';
-import Hero from '../components/Hero';
-import RouteSideCar from '../components/RoutesSideBar';
+import { VStack, Center, Text } from '@chakra-ui/react';
+import Hero from '../components/templates/Hero';
+import RouteSideCar from '../components/router/RoutesSideBar';
 import ThoughtsMaker from '../components/ThoughtsMaker';
 import Head from 'next/head';
 import Timeline from '../components/Timeline';
@@ -30,7 +30,9 @@ const Index: React.FC<Props> = ({ timeline, user }: Props) => {
     const router = useRouter();
 
     const rehydrate = () => {
-        router.replace(router.asPath);
+        (async () => {
+            await router.replace(router.asPath);
+        })();
     };
 
     return (
@@ -51,6 +53,11 @@ const Index: React.FC<Props> = ({ timeline, user }: Props) => {
                         { user && <ThoughtsMaker user={user} rehydrate={rehydrate} /> }
                         <Hero title={ user?.username || 'Graph of Thoughts'}/>
                         <Timeline timeline={timeline} />
+                        <Text
+                            pt={2} fontSize="sm" color="#aaaaaa"
+                        >
+                            default images by MrSquaare
+                        </Text>
                     </VStack>
                 </Center>
             </header>

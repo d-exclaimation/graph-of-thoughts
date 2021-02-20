@@ -16,16 +16,17 @@ import {
     ModalHeader,
     ModalOverlay
 } from '@chakra-ui/react';
-import {favRed, nextBlue} from '../constants/color.scheme';
+import {favRed, nextBlue} from '../../constants/color.scheme';
 
 interface Props {
+    title: string,
     isShown: boolean,
     onCancel: () => void,
     onConfirm: () => void,
     body: JSX.Element
 }
 
-const FormModal: React.FC<Props> = ({isShown, onConfirm, onCancel, body}: Props) => {
+const FormModal: React.FC<Props> = ({title, isShown, onConfirm, onCancel, body}: Props) => {
     return (
         <Modal
             size={'2xl'}
@@ -34,7 +35,7 @@ const FormModal: React.FC<Props> = ({isShown, onConfirm, onCancel, body}: Props)
         >
             <ModalOverlay />
             <ModalContent bg={'#282c34'} color={'#fafafa'}>
-                <ModalHeader>Create your account</ModalHeader>
+                <ModalHeader> { title } </ModalHeader>
                 <ModalCloseButton />
                 <ModalBody pb={6}>
                     { body }

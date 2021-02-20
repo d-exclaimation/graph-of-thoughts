@@ -9,12 +9,12 @@
 import React from 'react';
 
 import { Box, Button, Stack } from '@chakra-ui/react';
-import {nextBlue} from '../constants/color.scheme';
+import {nextBlue} from '../../constants/color.scheme';
 import Link from 'next/link';
 
-import {routes} from '../lib/routes';
-import {useWindowSize} from '../lib/WindowConfig';
-import {capitalized} from '../lib/Typography';
+import {routes} from '../../lib/routes';
+import {useWindowSize} from '../../lib/WindowConfig';
+import {capitalized} from '../../lib/Typography';
 
 const RouteSideCar: React.FC = (): JSX.Element => {
     const res = routes();
