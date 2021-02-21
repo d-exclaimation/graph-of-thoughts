@@ -20,7 +20,7 @@ import {nextBlue} from '../constants/color.scheme';
 interface Props {
     isOpen: boolean,
     onClose: () => void,
-    onConfirm: (title: string, body: string) => void,
+    onConfirm: (title: string, body: string, imageURL: string | null) => void,
 }
 
 export const ThoughtsModal: React.FC<Props> = ({ isOpen, onConfirm, onClose }: Props) => {
@@ -36,7 +36,7 @@ export const ThoughtsModal: React.FC<Props> = ({ isOpen, onConfirm, onClose }: P
 
     return (
         <>
-            <FormModal title={'New Thought'} isShown={isOpen} onCancel={onClose} onConfirm={() => onConfirm(title, body)} body={
+            <FormModal title={'New Thought'} isShown={isOpen} onCancel={onClose} onConfirm={() => onConfirm(title, body, image.length ? image : null)} body={
                 (<>
                     <FormControl>
                         <FormLabel> Title </FormLabel>

@@ -8,20 +8,53 @@
 
 import React from 'react';
 
-import { Box, Img, Link } from '@chakra-ui/react';
+import { Box, Img, Link, Button } from '@chakra-ui/react';
 
 import {drivePlayURL} from '../../lib/GoogleDriveURL';
+import {nextBlue} from '../../constants/color.scheme';
 
 interface Props {
     title: string,
     body: string,
+    onDelete?: () => void,
     imageURL?: string,
     url?: string,
 }
 
 const bar = drivePlayURL('https://drive.google.com/file/d/11xSLF9Lf_UUwAklQBEjoemAlUiBv0l2K/view?usp=sharing');
 
-const Post: React.FC<Props> = ({ title, body, imageURL, url }: Props) => {
+const Post: React.FC<Props> = ({ title, body, onDelete, imageURL, url }: Props) => {
+    const postInner = (): JSX.Element => {
+        return (
+            <Box p="3">
+                { onDelete &&
+                <Button
+                    onClick={onDelete}
+                    color={nextBlue}
+                    variant="ghost"
+                    shadow="dark-lg"
+                    size="sm"
+                    mr={3}
+                >
+                    Delete
+                </Button>
+                }
+                <Box
+                    mt="1"
+                    fontWeight="semibold"
+                    lineHeight="tight"
+                    isTruncated
+                    color="#fafafa"
+                >
+                    {title}
+                </Box>
+
+                <Box fontSize="sm" color="#dadada">
+                    {body}
+                </Box>
+            </Box>
+        );
+    };
 
     return (
         <Box bg="#282c34" maxW="sm" boxShadow="dark-lg" borderRadius="lg" overflow="hidden">
@@ -29,37 +62,8 @@ const Post: React.FC<Props> = ({ title, body, imageURL, url }: Props) => {
 
             { url ?
                 <Link href={url}>
-                    <Box p="3">
-                        <Box
-                            mt="1"
-                            fontWeight="semibold"
-                            lineHeight="tight"
-                            isTruncated
-                            color="#fafafa"
-                        >
-                            {title}
-                        </Box>
-
-                        <Box fontSize="sm" color="#dadada">
-                            {body}
-                        </Box>
-                    </Box>
-                </Link> :
-                <Box p="3">
-                    <Box
-                        mt="1"
-                        fontWeight="semibold"
-                        lineHeight="tight"
-                        isTruncated
-                        color="#fafafa"
-                    >
-                        {title}
-                    </Box>
-
-                    <Box fontSize="sm" color="#dadada">
-                        {body}
-                    </Box>
-                </Box>
+                    { postInner() }
+                </Link> : postInner()
             }
         </Box>
     );

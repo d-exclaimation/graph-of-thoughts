@@ -17,7 +17,7 @@ export interface ThoughtDTO {
     thought: {
         title: string,
         body: string,
-        imageURL?: string,
+        imageURL: string | null,
     },
     user: User
 }

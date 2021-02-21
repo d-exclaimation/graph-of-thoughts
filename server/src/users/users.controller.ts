@@ -7,18 +7,20 @@
 //
 
 import {
-    Controller,
-    Get,
-    Post,
-    Body,
-    Param, ParseIntPipe, NotFoundException, Delete, Put, BadRequestException, Query,
+    Controller, UseGuards,
+    Get, Post, Delete, Put,
+    Body, Param, Query,
+    ParseIntPipe,
+    NotFoundException, BadRequestException,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { User } from './interfaces/user.entity';
 import { UserSignUp } from './interfaces/users.interface';
 import { UpdateResult } from 'typeorm';
+import { AuthorizationGuard } from '../middleware/authorization.guard';
 
 @Controller('/users')
+@UseGuards(AuthorizationGuard)
 export class UsersController {
 
     constructor(private userService: UsersService) {}

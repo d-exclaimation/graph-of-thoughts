@@ -51,10 +51,10 @@ const Index: React.FC<Props> = ({ timeline, user }: Props) => {
                     <VStack>
                         <RouteSideCar/>
                         { user && <ThoughtsMaker user={user} rehydrate={rehydrate} /> }
-                        <Hero title={ user?.username || 'Graph of Thoughts'}/>
-                        <Timeline timeline={timeline} />
+                        <Hero title={'Graph of Thoughts'}/>
+                        { timeline.length && <Timeline user={user} timeline={timeline} rehydrate={rehydrate} /> }
                         <Text
-                            pt={2} fontSize="sm" color="#aaaaaa"
+                            pt={2} pb={2} fontSize="sm" color="#aaaaaa"
                         >
                             default images by MrSquaare
                         </Text>

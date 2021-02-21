@@ -32,10 +32,13 @@ const ThoughtsMaker: React.FC<Props> = ({ user, rehydrate }: Props) => {
     const onOpen = () => {
         setOpen(true);
     };
-    const onConfirm = (title: string, body: string) => {
-        postThoughts(user, title, body);
-        rehydrate();
-        onClose();
+    const onConfirm = (title: string, body: string, imageURL: string | null) => {
+        (async () => {
+            const res = await postThoughts(user, title, body, imageURL);
+            if (res)
+                rehydrate();
+            onClose();
+        })();
     };
 
     return (

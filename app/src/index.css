@@ -1,8 +1,13 @@
 .App-header {
+    /* Use like a good background color, min height requirement*/
     background-color: #282c34;
     min-height: 100vh;
+
+    /* Wraps all in a flex, so it can be centered nicely */
     display: flex;
     flex-direction: column;
+
+    /* Center everything and make the font size looks nice by default */
     align-items: center;
     justify-content: center;
     font-size: calc(10px + 2vmin);

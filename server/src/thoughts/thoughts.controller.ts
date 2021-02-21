@@ -8,22 +8,20 @@
 
 import {
     Body,
-    Controller,
-    Get,
-    Param,
+    Controller, UseGuards,
+    Param, Query,
     ParseIntPipe,
-    Post,
-    Put,
-    Delete,
-    NotFoundException,
-    ForbiddenException, UnauthorizedException, Query, BadRequestException,
+    Get, Post, Put, Delete,
+    NotFoundException, ForbiddenException, UnauthorizedException, BadRequestException,
 } from '@nestjs/common';
 import { ThoughtsService } from './thoughts.service';
 import { IThoughts, IThoughtUser } from './interfaces/thoughts.interface';
 import { Thought } from './interfaces/thought.entity';
 import { UpdateResult } from 'typeorm';
+import { AuthorizationGuard } from '../middleware/authorization.guard';
 
 @Controller('/thoughts')
+@UseGuards(AuthorizationGuard)
 export class ThoughtsController {
 
     constructor(private thoughtService: ThoughtsService) {}
