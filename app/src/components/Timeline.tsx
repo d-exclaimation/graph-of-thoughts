@@ -14,6 +14,7 @@ import {Thoughts} from '../models/thoughts';
 import Post from './templates/Post';
 import {User} from '../models/users';
 import {deleteThought} from '../lib/GetThoughts';
+import {useWindowSize} from '../lib/WindowConfig';
 
 interface Props {
     user?: User,
@@ -22,19 +23,20 @@ interface Props {
 }
 
 const Timeline: React.FC<Props> = ({ user, timeline, rehydrate }: Props) => {
+    const window = useWindowSize();
     const onDelete = (user: User, thought: Thoughts) => {
         (async () => {
             await deleteThought(user, thought);
             rehydrate();
         })();
     };
+    const postHeight = Math.floor(window.height / 3);
 
     return (
         <SimpleGrid columns={Math.min(3, timeline.length)} spacing={6}>
             { timeline.map((thought, i) => {
                 return (
                     <Box
-                        shadow="dark-lg"
                         key={i}
                     >
                         { user ?

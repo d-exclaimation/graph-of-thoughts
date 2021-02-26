@@ -11,7 +11,7 @@ import React from 'react';
 import { Box, Img, Link, Button } from '@chakra-ui/react';
 
 import {drivePlayURL} from '../../lib/GoogleDriveURL';
-import {nextBlue} from '../../constants/color.scheme';
+import {favRed} from '../../constants/color.scheme';
 
 interface Props {
     title: string,
@@ -26,11 +26,11 @@ const bar = drivePlayURL('https://drive.google.com/file/d/11xSLF9Lf_UUwAklQBEjoe
 const Post: React.FC<Props> = ({ title, body, onDelete, imageURL, url }: Props) => {
     const postInner = (): JSX.Element => {
         return (
-            <Box p="3">
+            <Box p="3" shadow="dark-lg">
                 { onDelete &&
                 <Button
                     onClick={onDelete}
-                    color={nextBlue}
+                    color={favRed}
                     variant="ghost"
                     shadow="dark-lg"
                     size="sm"
