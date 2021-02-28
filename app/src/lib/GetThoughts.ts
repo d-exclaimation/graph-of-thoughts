@@ -24,6 +24,22 @@ export const getThoughts = async (): Promise<Thoughts[]> => {
     }
 };
 
+export const checkUser = async (user: User, thought: Thoughts): Promise<boolean> => {
+    try {
+        const res = await fetch((process.env.API || 'http://localhost:5000/thoughts') + '/filter' + `?userid=${user.id}`, {
+            method: 'GET',
+            headers: {
+                'Authorization': process.env.AUTH_TOKEN || '',
+            }
+        });
+        const thoughts: Thoughts[] = await res.json();
+        return !!(thoughts.filter(option => option.id === thought.id && thought.title === option.title).length);
+    } catch (err) {
+        console.log(err);
+        return false;
+    }
+};
+
 export const getThought = async (id: number): Promise<Thoughts | null> => {
     try {
         const res = await fetch((process.env.API || 'http://localhost:5000/thoughts') + `/${id}`, {

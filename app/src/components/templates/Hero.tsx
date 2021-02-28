@@ -12,12 +12,13 @@ import { nextBlue } from '../../constants/color.scheme';
 
 interface HeroProps {
     title? : string,
+    size?: string
 }
 
-const Hero: React.FC<HeroProps> = ({ title }: HeroProps) => {
+const Hero: React.FC<HeroProps> = ({ title, size }: HeroProps) => {
     return (
         <Heading
-            fontSize="6vw"
+            fontSize={ size ?? '6vw' }
             color={nextBlue}
         >
             { title ?? 'Next.js' }

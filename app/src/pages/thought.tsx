@@ -8,24 +8,38 @@
 
 import React from 'react';
 
-import {Center, VStack, Textarea, Box} from '@chakra-ui/react';
+import {Center, VStack, Text, Box, Img, Button, Flex, Spacer} from '@chakra-ui/react';
 
 import {Thoughts} from '../models/thoughts';
 import {GetServerSideProps} from 'next';
-import {getThought} from '../lib/GetThoughts';
+import {checkUser, deleteThought, getThought} from '../lib/GetThoughts';
 import Head from 'next/head';
 import RouteSideCar from '../components/router/RoutesSideBar';
 import Hero from '../components/templates/Hero';
-import {nextBlue} from '../constants/color.scheme';
 import {useWindowSize} from '../lib/WindowConfig';
+import {User} from '../models/users';
+import Router from 'next/router';
+import {favRed} from '../constants/color.scheme';
 
 interface Props {
-    curr: Thoughts
+    curr: Thoughts,
+    user?: User,
+    isMine: boolean
 }
 
-const Thought: React.FC<Props> = ({ curr }: Props) => {
+const Thought: React.FC<Props> = ({ curr, user, isMine }: Props) => {
     const window = useWindowSize();
-
+    const deleteThis = (user: User, thought: Thoughts) => {
+        (async () => {
+            await deleteThought(user, thought);
+            await Router.push('/');
+        })();
+    };
+    const onDelete = () => {
+        if(!user)
+            return;
+        deleteThis(user, curr);
+    };
     return (
         <>
             <Head>
@@ -41,15 +55,31 @@ const Thought: React.FC<Props> = ({ curr }: Props) => {
                 <Center>
                     <VStack>
                         <RouteSideCar/>
-                        <Hero title={curr.title}/>
-                        <Box p={10} shadow="dark-lg">
-                            <Textarea
-                                w={Math.round(window.width * 0.7)}
-                                color={nextBlue}
-                                onChange={e => console.log(e.target.value)}
-                                variant="flushed"
-                                placeholder={curr.body}
-                            />
+                        <Box borderRadius={20} shadow="dark-lg" maxW={Math.floor(window.width * 0.8)}>
+                            { curr.imageURL && <Img src={curr.imageURL} /> }
+                            <Box mx={10} mt={5}>
+                                <Flex>
+                                    <Hero title={curr.title} size={'6xl'} />
+                                    <Spacer />
+                                    <Center>
+                                        { isMine &&
+                                        <Button
+                                            onClick={onDelete}
+                                            color={favRed}
+                                            variant="ghost"
+                                            shadow="dark-lg"
+                                            size="sm"
+                                            mr={3}
+                                        >
+                                            Delete
+                                        </Button>
+                                        }
+                                    </Center>
+                                </Flex>
+                            </Box>
+                            <Text m={10} className="Text-Paragraph" >
+                                { curr.body }
+                            </Text>
                         </Box>
                     </VStack>
                 </Center>
@@ -61,8 +91,12 @@ const Thought: React.FC<Props> = ({ curr }: Props) => {
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
     const query = context.query.pid as string | undefined;
+    const user: User = {
+        id: 2,
+        username: 'd-exclaimation',
+        email: 'vincentlimchen@gmail.com'
+    };
     if (!query) {
-        console.log('Fucking query');
         return {
             notFound: true,
         };
@@ -74,7 +108,9 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
         };
     return {
         props: {
-            curr: curr
+            curr: curr,
+            user,
+            isMine: await checkUser(user, curr)
         }
     };
 };

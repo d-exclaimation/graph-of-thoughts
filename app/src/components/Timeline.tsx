@@ -15,7 +15,6 @@ import Post from './templates/Post';
 import {User} from '../models/users';
 import {deleteThought} from '../lib/GetThoughts';
 import Link from 'next/link';
-import {useWindowSize} from '../lib/WindowConfig';
 
 interface Props {
     user?: User,
@@ -24,7 +23,6 @@ interface Props {
 }
 
 const Timeline: React.FC<Props> = ({ user, timeline, rehydrate }: Props) => {
-    const window = useWindowSize();
     const onDelete = (user: User, thought: Thoughts) => {
         (async () => {
             await deleteThought(user, thought);
@@ -40,17 +38,14 @@ const Timeline: React.FC<Props> = ({ user, timeline, rehydrate }: Props) => {
                         key={i}
                     >
                         { user ?
-                            <Post title={thought.title} body={thought.body} imageURL={thought.imageURL} onDelete={() => {
+                            <Post title={thought.title} body={thought.body} imageURL={thought.imageURL} url={`/thought?pid=${thought.id}`} onDelete={() => {
                                 onDelete(user, thought);
                             }} /> :
-                            <Post title={thought.title} body={thought.body} imageURL={thought.imageURL} />
+                            <Post title={thought.title} body={thought.body} imageURL={thought.imageURL} url={`/thought?pid=${thought.id}`} />
                         }
-                        <Link href={`/thought?pid=${thought.id}`}>
-                            <Button> Peek </Button>
-                        </Link>
                     </Box>
                 );
-            }) }
+            })}
         </SimpleGrid>
     );
 };
