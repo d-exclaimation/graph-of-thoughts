@@ -24,6 +24,21 @@ export const getThoughts = async (): Promise<Thoughts[]> => {
     }
 };
 
+export const getThought = async (id: number): Promise<Thoughts | null> => {
+    try {
+        const res = await fetch((process.env.API || 'http://localhost:5000/thoughts') + `/${id}`, {
+            method: 'GET',
+            headers: {
+                'Authorization': process.env.AUTH_TOKEN || '',
+            }
+        });
+        return await res.json();
+    } catch (err) {
+        console.log(err);
+        return null;
+    }
+};
+
 export const postThoughts = async (user: User, title: string, body: string, imageURL: string | null): Promise<Thoughts | null> => {
     const data: ThoughtDTO = {
         thought: {

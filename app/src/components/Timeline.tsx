@@ -8,12 +8,13 @@
 
 import React from 'react';
 
-import {Box, SimpleGrid} from '@chakra-ui/react';
+import {Box, SimpleGrid, Button} from '@chakra-ui/react';
 
 import {Thoughts} from '../models/thoughts';
 import Post from './templates/Post';
 import {User} from '../models/users';
 import {deleteThought} from '../lib/GetThoughts';
+import Link from 'next/link';
 import {useWindowSize} from '../lib/WindowConfig';
 
 interface Props {
@@ -30,7 +31,6 @@ const Timeline: React.FC<Props> = ({ user, timeline, rehydrate }: Props) => {
             rehydrate();
         })();
     };
-    const postHeight = Math.floor(window.height / 3);
 
     return (
         <SimpleGrid columns={Math.min(3, timeline.length)} spacing={6}>
@@ -45,6 +45,9 @@ const Timeline: React.FC<Props> = ({ user, timeline, rehydrate }: Props) => {
                             }} /> :
                             <Post title={thought.title} body={thought.body} imageURL={thought.imageURL} />
                         }
+                        <Link href={`/thought?pid=${thought.id}`}>
+                            <Button> Peek </Button>
+                        </Link>
                     </Box>
                 );
             }) }
