@@ -11,7 +11,7 @@ import { User } from '../models/users';
 export const login = async (email: string): Promise<User | null> => {
     try {
         const res = await fetch((process.env.USER_API || 'http://localhost:5000/users') + `/login?email=${email}`, {
-            method: 'DELETE',
+            method: 'GET',
             headers: {
                 'Authorization': process.env.NEXT_PUBLIC_AUTH || ''
             }

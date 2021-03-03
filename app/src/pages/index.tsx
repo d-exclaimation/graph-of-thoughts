@@ -15,26 +15,39 @@ import ThoughtsMaker from '../components/ThoughtsMaker';
 import Head from 'next/head';
 import Timeline from '../components/Timeline';
 
+import { login } from '../lib/UserHandler';
 import {GetServerSideProps} from 'next';
 import {Thoughts} from '../models/thoughts';
 import {getThoughts} from '../lib/GetThoughts';
 import {User} from '../models/users';
 import { useRouter } from 'next/router';
+import Cookies from 'js-cookie';
 
 interface Props {
-    user?: User
     timeline: Thoughts[]
 }
 
-const Index: React.FC<Props> = ({ timeline, user }: Props) => {
+const Index: React.FC<Props> = ({ timeline }: Props) => {
     const router = useRouter();
-
+    const [user, setUser] = React.useState<User | undefined>(undefined);
     const rehydrate = () => {
         (async () => {
             await router.replace(router.asPath);
         })();
     };
 
+    if (typeof window !== 'undefined' && !user) {
+        const email = Cookies.get('thoughts-email');
+        if (email) {
+            (async () => {
+                const res = await login(email);
+                console.log(res);
+                setUser(res ?? undefined);
+            })();
+        }
+        else
+            router.push('/login').catch(console.log);
+    }
 
     return (
         <>
@@ -71,11 +84,6 @@ export const getServerSideProps: GetServerSideProps = async () => {
     const timeline = await getThoughts();
     return {
         props: {
-            user: {
-                id: 2,
-                username: 'd-exclaimation',
-                email: 'vincentlimchen@gmail.com'
-            },
             timeline
         }
     };

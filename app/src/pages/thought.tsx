@@ -20,15 +20,29 @@ import {useWindowSize} from '../lib/WindowConfig';
 import {User} from '../models/users';
 import Router from 'next/router';
 import {favRed} from '../constants/color.scheme';
+import Cookies from 'js-cookie';
+import {login} from '../lib/UserHandler';
 
 interface Props {
     curr: Thoughts,
-    user?: User,
     isMine: boolean
 }
 
-const Thought: React.FC<Props> = ({ curr, user, isMine }: Props) => {
+const Thought: React.FC<Props> = ({ curr, isMine }: Props) => {
+    const [user, setUser] = React.useState<User | null>(null);
     const window = useWindowSize();
+
+    if (typeof window !== 'undefined' && !user) {
+        const email = Cookies.get('thoughts-email');
+        if (email) {
+            (async () => {
+                const res = await login(email);
+                console.log(res);
+                setUser(res);
+            })();
+        }
+    }
+
     const deleteThis = (user: User, thought: Thoughts) => {
         (async () => {
             await deleteThought(user, thought);
@@ -109,7 +123,6 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     return {
         props: {
             curr: curr,
-            user,
             isMine: await checkUser(user, curr)
         }
     };
