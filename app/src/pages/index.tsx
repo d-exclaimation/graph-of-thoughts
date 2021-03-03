@@ -35,6 +35,7 @@ const Index: React.FC<Props> = ({ timeline, user }: Props) => {
         })();
     };
 
+
     return (
         <>
             <Head>
