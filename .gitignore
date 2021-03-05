@@ -17,6 +17,7 @@ lerna-debug.log*
 # Env
 **/.env
 **/xcshareddata/xcschemes/
+**/Environment.swift
 
 # OS
 .DS_Store
