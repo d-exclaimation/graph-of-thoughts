@@ -12,19 +12,32 @@ struct ContentView: View {
     @State var thoughts = [Thought]()
     
     var body: some View {
-        List {
-            ForEach(thoughts) { thought in
-                Text(thought.title)
-            }
-            Button {} label: {
-                Text("Reload")
-                    .padding(10)
-                    .background(Color.gray)
-                    .cornerRadius(buttonRadius)
-                    .foregroundColor(.blue)
+        ZStack {
+            Rectangle()
+                .foregroundColor(Color(red: 40/255, green:  44/255, blue: 52/255))
+                .ignoresSafeArea()
+            VStack {
+                ScrollView {
+                    ForEach(thoughts) { thought in
+                        CardedView(
+                            title: thought.title,
+                            content: thought.body,
+                            imageURL: thought.imageURL)
+                    }
+                }
+                
+                Button {
+                    loadAll()
+                } label: {
+                    Text("Reload")
+                        .padding(10)
+                        .background(Color.white)
+                        .cornerRadius(buttonRadius)
+                        .foregroundColor(.blue)
+                }
             }
         }
-        .accentColor(.red)
+        .onAppear(perform: loadAll)
     }
     
     func loadAll() {
