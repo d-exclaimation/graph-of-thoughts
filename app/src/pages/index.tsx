@@ -45,8 +45,9 @@ const Index: React.FC<Props> = ({ timeline }: Props) => {
                 setUser(res ?? undefined);
             })();
         }
-        else
+        else {
             router.push('/login').catch(console.log);
+        }
     }
 
     return (

@@ -30,7 +30,7 @@ const Login: React.FC = () => {
                     color={nextBlue}
                     variant="ghost"
                     onClick={() => {
-                        Cookies.set('thoughts-email', 'vincentlimchen@gmail.com', { expires: 1 });
+                        Cookies.set('thoughts-email', process.env.NEXT_PUBLIC_ADMIN || '', { expires: 1 });
                         Router.push('/').catch(console.log);
                     }}
                     boxShadow="dark-lg"
