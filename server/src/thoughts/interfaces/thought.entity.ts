@@ -6,6 +6,7 @@
 //  Copyright © 2021 d-exclaimation. All rights reserved.
 //
 
+import { __notitle__ } from 'src/constants/entity.defaults';
 import { Entity, Column, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
 import { User } from '../../users/interfaces/user.entity';
 import { IThoughts } from './thoughts.interface';
@@ -15,7 +16,7 @@ export class Thought {
     @PrimaryGeneratedColumn()
     id!: number;
 
-    @Column()
+    @Column({ default: __notitle__ })
     title!: string;
 
     @Column()

@@ -6,6 +6,7 @@
 //  Copyright © 2021 d-exclaimation. All rights reserved.
 //
 
+import { __noname__ } from 'src/constants/entity.defaults';
 import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
 import { Thought } from '../../thoughts/interfaces/thought.entity';
 import { UserSignUp } from './users.interface';
@@ -15,7 +16,7 @@ export class User {
     @PrimaryGeneratedColumn()
     id!: number;
 
-    @Column({ default: 'Anonymous' })
+    @Column({ default: __noname__ })
     username!: string;
 
     @Column()
