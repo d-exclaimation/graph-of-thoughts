@@ -1,2 +1,2 @@
-*.ts linguist-language=Elixir
+*.js linguist-language=Elixir
 *.swift linguist-language=Elixir
